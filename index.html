@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce App</title>
+    <link rel="stylesheet" href="./style.css">
+   <script src="https://www.paypal.com/sdk/js?client-id=AWOQ7nlZT1H8xCiAfd5kb0r3iFcQSoOugEVIVPA6bUEBRvm4fUx7Q3gQa_S9qG6AZr0MXYF9TBeAZgXE&currency=USD"></script>
+   <script>
+    function buyProduct(price) {
+  document.getElementById("smart-button-container").style.display =
+    "block";
+  paypal
+    .Buttons({
+      style: {
+        shape: "rect",
+        color: "gold",
+        layout: "vertical",
+        label: "paypal",
+      },
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                currency_code: "USD",
+                value: price,
+              },
+            },
+          ],
+        });
+      },
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (orderData) {
+          console.log(
+            "Capture result",
+            orderData,
+            JSON.stringify(orderData, null, 2)
+          );
+          const element = document.getElementById(
+            "paypal-button-container"
+          );
+          element.innerHTML = "";
+          element.innerHTML = "<h3>Thank you for your payment!</h3>";
+        });
+      },
+      onError: function (err) {
+        console.log(err);
+      },
+    })
+    .render("#paypal-button-container");
+}
+   </script>
+</head>
+<body>
+    <nav>
+        <h1>E-Commerce App</h1>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Cart</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <div class="product">
+            <img src="./assets/earphone.jpg" alt="Product 1" width="300px">
+            <h2>Ultima Earbuds</h2>
+            <h3>Rs.2199</h3>
+            <button class="buy-button" onclick="buyProduct(2199)">Buy Now</button>
+        </div>
+        <div class="product">
+            <img src="./assets/headphone.webp" alt="Product 2" width="300px">
+            <h2>Wireless Bluetooth Headset</h2>
+            <h3>Rs.999</h3>
+            <button class="buy-button" onclick="buyProduct(999)">Buy Now</button>
+        </div>
+        <div class="product">
+            <img src="./assets/phonecase.webp" alt="Product 3" width="300px">
+            <h2>Phone Case</h2>
+            <h3>Rs.700</h3>
+            <button class="buy-button" onclick="buyProduct(700)">Buy Now</button>
+        </div>
+        <div class="product">
+            <img src="./assets/smartwatch.jpg" alt="Product 4" width="300px">
+            <h2>Ultra Smartwatch</h2>
+            <h3>Rs.999</h3>
+            <button class="buy-button" onclick="buyProduct(999)">Buy Now</button>
+        </div>
+    </div>
+    <!-- payment -->
+    <div>
+        <div id="smart-button-container" style="display: none">
+            <div style="text-align: center">
+              <div id="paypal-button-container"></div>
+            </div>
+          </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 E-Commerce App. All rights reserved.</p>
+    </footer>
+</body>
+</html>
